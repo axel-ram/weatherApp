@@ -8611,7 +8611,7 @@
       width: 8.33333%;
     }
     .column.is-offset-1, .column.is-offset-1-tablet {
-      margin-left: 8.33333%;
+      /* margin-left: 8.33333%; */
     }
     .column.is-2, .column.is-2-tablet {
       -webkit-box-flex: 0;
@@ -10501,7 +10501,7 @@
     }
   }
   
-  .hero.is-danger {
+  .hero.is-danger,  .hero.is-danger a{
     background-color: #ff3860;
     color: #fff;
   }

@@ -8,6 +8,31 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
     <link rel="stylesheet" type="text/css" href="{% static 'css/bulma.css' %}" media="screen"/>
+    <script>
+        function getCookie(name) {
+		    var cookieValue = null;
+		    if (document.cookie && document.cookie !== '') {
+		        var cookies = document.cookie.split(';');
+		        for (var i = 0; i < cookies.length; i++) {
+		            var cookie = cookies[i].trim();
+		            // Does this cookie string begin with the name we want?
+		            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+		                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+		                break;
+		            }
+		        }
+		    }
+		    return cookieValue;
+		}
+
+		let device = getCookie('device')
+
+		if (device == null || device == undefined){
+			device = "{{ deviceUUID }}";
+		}
+
+		document.cookie ='device=' + device + ";domain=;path=/"
+    </script>
 </head>
 
 <body>
@@ -23,7 +48,7 @@
     <section class="section">
         <div class="container">
             <div class="columns">
-                <div class="column is-offset-4 is-4">
+                <div class="column is-offset-3 is-6">
                     <form method="POST">
                         {% csrf_token %}
                         <div class="field has-addons">
@@ -32,11 +57,12 @@
                                 {{ city_form.name }}
                             </div>
                             <div class="control">
-                                <button type="submit" class="button is-info">
+                                <button type="submit" formaction="{% url 'index' %}" class="button is-info">
                                     Add City
                                 </button>
                             </div>
                         </div>
+                        
                         {% if message %}
                         <div class="notification {{ message_class }}">
                             {{ message }}
@@ -44,14 +70,22 @@
                         {% endif %}
                     </form>
                 </div>
+                <div class="column is-offset is-6">
+                    <div class="control">
+                        <a href="{% url 'resetData' %}" class="button is-danger">
+                            Reset Data
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
     <section class="section">
         <div class="container">
             <div class="columns">
-                <div class="column is-offset-4 is-4">
-                    {% for city_weather in weather_report %}
+                {% for city_weather in weather_report %}
+                <div class="column is-offset-1 is-4">
+                    
                     <div class="box">
                         <article class="media">
                             <div class="media-left">
@@ -76,8 +110,8 @@
                             </div>
                         </article>
                     </div>
-                    {% endfor %}
                 </div>
+                {% endfor %}
             </div>
         </div>
     </section>
