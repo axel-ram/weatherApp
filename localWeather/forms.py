@@ -9,6 +9,8 @@ class CityForm(ModelForm):
             'name' : TextInput(
                 attrs={
                     'class' : 'input',
-                    'placeholder' : 'City Name'
+                    'placeholder' : 'City Name',
+                    'name' : 'city_name',
+                    'autofocus' : ''
                 }
         )}

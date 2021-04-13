@@ -49,12 +49,12 @@
         <div class="container">
             <div class="columns">
                 <div class="column is-offset-3 is-6">
-                    <form method="POST">
+                    <form method="POST" name="city_form">
                         {% csrf_token %}
                         <div class="field has-addons">
                             <div class="control is-expanded">
                                 <!-- <input class="input" type="text" placeholder="City Name"> -->
-                                {{ city_form.name }}
+                                {{ cityForm.name }}
                             </div>
                             <div class="control">
                                 <button type="submit" formaction="{% url 'index' %}" class="button is-info">
@@ -64,7 +64,7 @@
                         </div>
                         
                         {% if message %}
-                        <div class="notification {{ message_class }}">
+                        <div class="notification {{ messageClass }}">
                             {{ message }}
                         </div>
                         {% endif %}
@@ -83,7 +83,7 @@
     <section class="section">
         <div class="container">
             <div class="columns">
-                {% for city_weather in weather_report %}
+                {% for city_weather in weatherReport %}
                 <div class="column is-offset-1 is-4">
                     
                     <div class="box">

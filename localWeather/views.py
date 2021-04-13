@@ -4,51 +4,35 @@ import requests
 from .models import City, Device
 from .forms import CityForm
 import uuid
-from .services import weatherAPIlist
-
+from .services import weatherAPIlist, addNewCity
+from .constants import LocalWeatherConstants as const
 def index(request):
     message = ''
-    error_msg = ''
-    message_class = ''
-    city_form = CityForm()
-    deviceUUID = request.COOKIES.get('device',str(uuid.uuid1()))   
+    messageClass = ''
+    cityForm = CityForm()
+    deviceUUID = request.COOKIES.get('device',str(uuid.uuid1()))
     
     device, created = Device.objects.get_or_create(device=deviceUUID)
     if request.method == 'POST':
         form = CityForm(request.POST)
         if form.is_valid():
             new_city = form.cleaned_data['name']
-            existing_city = City.objects.filter(device__device=device.device).filter(name__iexact=new_city).count()
-            print("rns",City.objects.filter(device__device=device.device).count())
-            if City.objects.filter(device__device=device.device).count() < 3:
-                if not existing_city:
-                    response = requests.get(settings.API_URL.format(new_city)).json()
-                    if response.get('cod') == 200:
-                        new_city = City.objects.create(name=response.get("name",""), device = device)
-                        new_city.save()
-                    else:
-                        error_msg = "City name is not correct."
-                else:
-                    error_msg = "City is already added."
-            else:
-                error_msg = "You cannot add more than 3 cities."
-            
-    
+            error_msg = addNewCity(device, new_city)
         if error_msg:
             message = error_msg
-            message_class = 'is-danger'
+            messageClass = const.messageClassDanger
         else:
-            message  = "City added successfully"
-            message_class = 'is-success'
+            message  = const.citySuccessfullyAdded
+            messageClass = const.messageClassSuccess
     
-    weather_report = weatherAPIlist(device)
+    weatherReport = weatherAPIlist(device)
     
     context = {
         'deviceUUID' : deviceUUID,
-        'city_form': city_form,
-        'weather_report': weather_report,
+        'cityForm': cityForm,
+        'weatherReport': weatherReport,
         'message' : message,
-        'message_class' : message_class
+        'messageClass' : messageClass
     }
     return render(request, 'localWeather/index.html', context)
 
